@@ -1,0 +1,14 @@
+{
+  "name": "testeurlogiciel_automatisez_des_tests_pour_une_boutique_en_ligne",
+  "version": "1.0.0",
+  "description": "test OC",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Test"
+  ],
+  "author": "JC",
+  "license": "ISC"
+}
