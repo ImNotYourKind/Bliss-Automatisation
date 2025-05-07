@@ -42,7 +42,6 @@ describe("Tests API - Avis", () => {
       },
       failOnStatusCode: false,
     }).then((response) => {
-      // On attend une erreur, par exemple 400 ou 422 selon l'API
       expect([400, 422]).to.include(response.status);
     });
   });
@@ -55,11 +54,10 @@ describe("Tests API - Avis", () => {
       body: {
         title: "Test avis note invalide",
         comment: "Note trop élevée.",
-        rating: 10 // note invalide, supposée hors limites (ex: max 5)
+        rating: 10
       },
       failOnStatusCode: false,
     }).then((response) => {
-      // On attend une erreur, par exemple 400 ou 422 selon l'API
       expect([400, 422]).to.include(response.status);
     });
   });
@@ -78,7 +76,6 @@ describe("Tests API - Avis", () => {
       },
       failOnStatusCode: false,
     }).then((response) => {
-      // On attend une erreur (400/422) ou une neutralisation du script
       expect([400, 422]).to.include(response.status);
     });
   });

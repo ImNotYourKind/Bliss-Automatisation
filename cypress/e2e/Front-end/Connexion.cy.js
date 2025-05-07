@@ -3,7 +3,7 @@ describe("Test de la connexion", () => {
     cy.visit("http://localhost:8080/");
   });
 
-  it("Vérifie que l'utilisateur est connecté en affichant le lien de déconnexion", () => {
+  it("Vérifie que l'utilisateur est connecté en affichant le lien du panier", () => {
     cy.get('[data-cy="nav-link-login"]').click();
     cy.get("#username").type("test2@test.fr");
     cy.get("#password").type("testtest");

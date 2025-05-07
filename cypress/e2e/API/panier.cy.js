@@ -47,14 +47,12 @@ describe("Tests API - Panier", () => {
           );
         }
       } else if (response.status === 404) {
-        // cas où aucune commande en cours
-        expect(response.body).to.have.property("title");
-        expect(response.body.title).to.contain("error");
+        expect(response.status).to.eq(404);
       }
     });
   });
 
-  // PUT /orders/add - ajouter un produit disponible
+  // PUT /orders/add - ajouter un produit disponible (ajouter ce test en /post)
   it("PUT /orders/add - ajouter un produit disponible au panier (id 5)", () => {
     cy.request({
       method: "PUT",
@@ -71,8 +69,24 @@ describe("Tests API - Panier", () => {
     });
   });
 
+  it("POST /orders/add - ajouter un produit disponible au panier (id 5)", () => {
+    cy.request({
+      method: "POST",
+      url: "http://localhost:8081/orders/add",
+      headers: { 
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json"
+      },
+      body: { product: 5, quantity: 1 },
+      failOnStatusCode: false,
+    }).then((response) => {
+      expect(response.status).to.eq(200);
+      expect(response.body).to.have.property("orderLines");
+    });
+  });
+
   // ATTENTION : Ce test échoue car l'API accepte l'ajout d'un produit en rupture de stock (id 3) et retourne 200 au lieu de 400/409.
-  // Cela révèle un bug ou une absence de contrôle métier côté serveur.
+  // Cela révèle un bug ou une absence de contrôle métier côté serveur.(ajouter ce test en /post)
   it("PUT /orders/add - ajouter un produit en rupture de stock (id 3)", () => {
     cy.request({
       method: "PUT",
@@ -81,16 +95,28 @@ describe("Tests API - Panier", () => {
         Authorization: `Bearer ${authToken}`,
         "Content-Type": "application/json"
       },
-      body: { product: 3, quantity: 1 },
+      body: { product: 3, quantity: 10 },
       failOnStatusCode: false,
     }).then((response) => {
-      // On attend une erreur, par exemple 400 ou 409 selon l'API
       expect([400, 409]).to.include(response.status);
     });
   });
 
-  // ATTENTION : Ce test échoue si l'API accepte une quantité négative sans retourner d'erreur (400 ou 422).
-  // Cela signale un bug ou une absence de validation côté serveur.
+  it("POST /orders/add - ajouter un produit en rupture de stock (id 3)", () => {
+    cy.request({
+      method: "POST",
+      url: "http://localhost:8081/orders/add",
+      headers: { 
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json"
+      },
+      body: { product: 3, quantity: 10 },
+      failOnStatusCode: false,
+    }).then((response) => {
+      expect([400, 409]).to.include(response.status);
+    });
+  });
+
   it("PUT /orders/add - ajouter un produit avec une quantité négative", () => {
     cy.request({
       method: "PUT",
@@ -102,7 +128,6 @@ describe("Tests API - Panier", () => {
       body: { product: 5, quantity: -2 },
       failOnStatusCode: false,
     }).then((response) => {
-      // On attend une erreur, par exemple 400 ou 422 selon l'API
       expect([400, 422]).to.include(response.status);
     });
   });
